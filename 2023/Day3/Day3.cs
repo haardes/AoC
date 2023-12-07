@@ -1,6 +1,6 @@
-namespace _2023.Day3;
+namespace _2023.Day03;
 
-public class Day3
+public class Day03
 {
     private static readonly string[] input = File.ReadAllLines("../../../Day3/input.txt");
 
