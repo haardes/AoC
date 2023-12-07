@@ -34,5 +34,5 @@ public class Day1
     New-Item -ItemType File -Path "./$Year/Day$Day/input.txt"
     New-Item -ItemType File -Path "./$Year/Day$Day/test_input.txt"
 
-    $Content | Out-File -Append "./$Year/Day $Day/Day$Day.cs"
+    $Content | Out-File -Append "./$Year/Day$Day/Day$Day.cs"
 }
