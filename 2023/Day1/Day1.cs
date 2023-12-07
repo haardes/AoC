@@ -1,28 +1,74 @@
-namespace _2023.Day1
+namespace _2023.Day1;
+
+public class Day1
 {
-    public class Day1
+    private static readonly string[] input = File.ReadAllLines("../../../Day1/input.txt");
+
+    [Fact]
+    public void PartOne()
     {
-        private static readonly string[] input = File.ReadAllLines("./input.txt");
+        int result = 0;
 
-        [Fact]
-        public void PartOne()
+        foreach (string line in input)
         {
-            int result = 0;
+            char? first = null;
+            char? second = null;
 
-            foreach (string line in input)
+            foreach (char c in line)
             {
+                if (!char.IsDigit(c)) continue;
 
+                first ??= c;
+                second = c;
             }
 
-            Assert.True(result == -1);
+            string digits = first.ToString() + second.ToString();
+            result += int.Parse(digits);
         }
 
-        [Fact]
-        public void PartTwo()
+        Console.WriteLine(result);
+        Assert.Equal(53974, result);
+    }
+
+    [Fact]
+    public void PartTwo()
+    {
+        int result = 0;
+
+        List<(string Key, string Value)> pairs = new()
+            {
+                ("one", "o1e"),
+                ("two", "t2o"),
+                ("three", "t3e"),
+                ("four", "4"),
+                ("five", "5e"),
+                ("six", "6"),
+                ("seven", "7n"),
+                ("eight", "e8t"),
+                ("nine", "n9e")
+            };
+
+        foreach (string l in input)
         {
-            int result = 0;
+            string line = l;
+            pairs.ForEach(kv => line = line.Replace(kv.Key, kv.Value));
 
-            Assert.True(result == -1);
+            char? first = null;
+            char? second = null;
+
+            foreach (char c in line)
+            {
+                if (!char.IsDigit(c)) continue;
+
+                first ??= c;
+                second = c;
+            }
+
+            string digits = first.ToString() + second.ToString();
+            result += int.Parse(digits);
         }
+
+        Console.WriteLine(result);
+        Assert.Equal(52840, result);
     }
 }
