@@ -53,7 +53,7 @@ public class Day03
                     isValidPartNumber = !input[x + 1][y].Equals('.');
                 }
 
-                while (char.IsDigit(input[x][y]))
+                while (y < input[x].Length - 1 && char.IsDigit(input[x][y]))
                 {
                     number += input[x][y];
 
