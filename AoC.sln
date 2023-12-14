@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2023", "2023.csproj", "{D20D4CC0-3955-4962-86B9-D7AF9275BE97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2023", "2023/2023.csproj", "{D20D4CC0-3955-4962-86B9-D7AF9275BE97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
