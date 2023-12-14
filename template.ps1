@@ -1,12 +1,25 @@
-$Year = Read-Host -Prompt "For what year do you wish to create the structure?"
+Param(
+    [Parameter(Mandatory=$True)]
+    [int]$year,
+    [switch]$next
+)
 
-for ($Day = 2; $Day -le 24; $Day++) {
+if ($next) {
+    $FolderPath = "./$year";
+
+    if (!(Test-Path -Path $FolderPath)) {
+        New-Item -ItemType Directory -Path "./$year"
+    }
+
+    $LatestDayFile = (Get-ChildItem -Path $FolderPath | Where-Object {$_.name -match 'Day'} | Sort-Object { [regex]::Replace($_.Name, '\d+', { $args[0].Value.PadLeft(20) }) } | select -Last 1).Name;
+    $LatestDay = [int]$LatestDayFile.Substring($LatestDayFile.Length - 2);
+    $DayString = '{0:d2}' -f ($LatestDay + 1)
     $Content = @"
-namespace _2023.Day$Day;
+namespace _2023.Day$DayString;
 
-public class Day1 
+public class Day$DayString 
 {
-    private static readonly string[] input = File.ReadAllLines("../../../Day$Day/input.txt");
+    private static readonly string[] input = File.ReadAllLines("../../../Day$DayString/input.txt");
 
     [Fact]
     public void PartOne()
@@ -28,11 +41,11 @@ public class Day1
 }
 "@
 
-    New-Item -ItemType Directory -Path "./$Year/Day$Day"
+    New-Item -ItemType Directory -Path "./$Year/Day$DayString"
 
-    New-Item -ItemType File -Path "./$Year/Day$Day/Day$Day.cs"
-    New-Item -ItemType File -Path "./$Year/Day$Day/input.txt"
-    New-Item -ItemType File -Path "./$Year/Day$Day/test_input.txt"
+    New-Item -ItemType File -Path "./$Year/Day$DayString/Day$DayString.cs"
+    New-Item -ItemType File -Path "./$Year/Day$DayString/input.txt"
+    New-Item -ItemType File -Path "./$Year/Day$DayString/test_input.txt"
 
-    $Content | Out-File -Append "./$Year/Day$Day/Day$Day.cs"
+    $Content | Out-File -Append "./$Year/Day$DayString/Day$DayString.cs"
 }
