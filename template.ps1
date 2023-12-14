@@ -5,14 +5,19 @@ Param(
 )
 
 if ($next) {
-    $FolderPath = "./$year";
+    $FolderPath = "./$year"
 
     if (!(Test-Path -Path $FolderPath)) {
         New-Item -ItemType Directory -Path "./$year"
     }
 
-    $LatestDayFile = (Get-ChildItem -Path $FolderPath | Where-Object {$_.name -match 'Day'} | Sort-Object { [regex]::Replace($_.Name, '\d+', { $args[0].Value.PadLeft(20) }) } | select -Last 1).Name;
-    $LatestDay = [int]$LatestDayFile.Substring($LatestDayFile.Length - 2);
+    $LatestDayFile = (Get-ChildItem -Path $FolderPath | Where-Object {$_.name -match 'Day'} | Sort-Object { [regex]::Replace($_.Name, '\d+', { $args[0].Value.PadLeft(20) }) } | select -Last 1).Name
+    if (!$LatestDayFile) {
+        $LatestDay = 0
+    } else {
+        $LatestDay = [int]$LatestDayFile.Substring($LatestDayFile.Length - 2)
+    }
+
     $DayString = '{0:d2}' -f ($LatestDay + 1)
     $Content = @"
 namespace _2023.Day$DayString;
