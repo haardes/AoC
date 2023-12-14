@@ -5,13 +5,17 @@ Param(
 )
 
 if ($next) {
-    $FolderPath = "./$year"
+    if (!(Test-Path -Path "./$year")) {
+        & dotnet new xunit -n $year
+        & dotnet add reference "./$year/$year.csproj"
 
-    if (!(Test-Path -Path $FolderPath)) {
-        New-Item -ItemType Directory -Path "./$year"
+        Remove-Item -Path "./$year/UnitTest1.cs"
+
+        "`nglobal using System;" | Out-File -Append "./$year/Usings.cs"
     }
 
-    $LatestDayFile = (Get-ChildItem -Path $FolderPath | Where-Object {$_.name -match 'Day'} | Sort-Object { [regex]::Replace($_.Name, '\d+', { $args[0].Value.PadLeft(20) }) } | select -Last 1).Name
+    $LatestDayFile = (Get-ChildItem -Path "./$year" | Where-Object {$_.name -match 'Day'} | Sort-Object { [regex]::Replace($_.Name, '\d+', { $args[0].Value.PadLeft(20) }) } | select -Last 1).Name
+
     if (!$LatestDayFile) {
         $LatestDay = 0
     } else {
@@ -20,7 +24,7 @@ if ($next) {
 
     $DayString = '{0:d2}' -f ($LatestDay + 1)
     $Content = @"
-namespace _2023.Day$DayString;
+namespace _$year.Day$DayString;
 
 public class Day$DayString 
 {
@@ -46,11 +50,11 @@ public class Day$DayString
 }
 "@
 
-    New-Item -ItemType Directory -Path "./$Year/Day$DayString"
+    New-Item -ItemType Directory -Path "./$year/Day$DayString"
 
-    New-Item -ItemType File -Path "./$Year/Day$DayString/Day$DayString.cs"
-    New-Item -ItemType File -Path "./$Year/Day$DayString/input.txt"
-    New-Item -ItemType File -Path "./$Year/Day$DayString/test_input.txt"
+    New-Item -ItemType File -Path "./$year/Day$DayString/Day$DayString.cs"
+    New-Item -ItemType File -Path "./$year/Day$DayString/input.txt"
+    New-Item -ItemType File -Path "./$year/Day$DayString/test_input.txt"
 
-    $Content | Out-File -Append "./$Year/Day$DayString/Day$DayString.cs"
+    $Content | Out-File -Append "./$year/Day$DayString/Day$DayString.cs"
 }
