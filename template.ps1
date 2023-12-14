@@ -6,8 +6,8 @@ Param(
 
 if ($next) {
     if (!(Test-Path -Path "./$year")) {
-        & dotnet new xunit -n $year
-        & dotnet add reference "./$year/$year.csproj"
+        & dotnet new xunit -n $year | Out-Null
+        & dotnet sln './AoC.sln' add "./$year/$year.csproj"
 
         Remove-Item -Path "./$year/UnitTest1.cs"
 
