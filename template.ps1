@@ -14,7 +14,7 @@ if ($next) {
         "`nglobal using System;" | Out-File -Append "./$year/Usings.cs"
     }
 
-    $LatestDayFile = (Get-ChildItem -Path "./$year" | Where-Object {$_.name -match 'Day'} | Sort-Object { [regex]::Replace($_.Name, '\d+', { $args[0].Value.PadLeft(20) }) } | select -Last 1).Name
+    $LatestDayFile = (Get-ChildItem -Path "./$year" | Where-Object {$_.name -match 'Day'} | Sort-Object { [regex]::Replace($_.Name, '\d+', { $args[0].Value.PadLeft(20) }) } | Select-Object -Last 1).Name
 
     if (!$LatestDayFile) {
         $LatestDay = 0
