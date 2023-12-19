@@ -1,5 +1,3 @@
-
-
 namespace _2015.Day09;
 
 public class Day09
@@ -32,6 +30,11 @@ public class Day09
 
         Console.WriteLine(result);
         Assert.Equal(-1, result);
+    }
+
+    private List<List<NetworkNode>> GeneratePermutations()
+    {
+        throw new NotImplementedException();
     }
 
     private static int GetDistance(NetworkNode previous, NetworkNode node)
