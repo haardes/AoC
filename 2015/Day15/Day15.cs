@@ -4,7 +4,7 @@ namespace _2015.Day15;
 
 public class Day15
 {
-    private static readonly string[] input = File.ReadAllLines("../../../Day15/test_input.txt");
+    private static readonly string[] input = File.ReadAllLines("../../../Day15/input.txt");
 
     [Fact]
     public void PartOne()
@@ -28,75 +28,94 @@ public class Day15
             });
         }
 
-        foreach (var kv in ingredients)
-        {
-            Console.WriteLine($"Cap: {kv.Value.Capacity}, dur: {kv.Value.Durability}, flav: {kv.Value.Flavour}, text: {kv.Value.Texture}");
-        }
-
-        // SUPER-NAIVE solution because it seemed fun to try
-        var count = 0;
-        var allCount = 0;
-
         for (var sprinkles = 0; sprinkles < 100; sprinkles++)
         {
-            var butterscotch = 100 - sprinkles;
-            /* for (var butterscotch = 0; butterscotch < 100 - sprinkles; butterscotch++)
-            { */
-            count++;
-            /*  for (var chocolate = 0; chocolate < 100 - sprinkles - butterscotch; chocolate++)
-             {
-                 var candy = 100 - sprinkles - butterscotch - chocolate; */
-            if (sprinkles == 56) Console.WriteLine("HELLO!");
+            for (var butterscotch = 0; butterscotch <= 100 - sprinkles; butterscotch++)
+            {
+                for (var chocolate = 0; chocolate <= 100 - sprinkles - butterscotch; chocolate++)
+                {
+                    var candy = 100 - sprinkles - butterscotch - chocolate;
+                    long capacityScore = sprinkles * ingredients["Sprinkles"].Capacity + butterscotch * ingredients["Butterscotch"].Capacity + chocolate * ingredients["Chocolate"].Capacity + candy * ingredients["Candy"].Capacity;
+                    long durabilityScore = sprinkles * ingredients["Sprinkles"].Durability + butterscotch * ingredients["Butterscotch"].Durability + chocolate * ingredients["Chocolate"].Durability + candy * ingredients["Candy"].Durability;
+                    long flavourScore = sprinkles * ingredients["Sprinkles"].Flavour + butterscotch * ingredients["Butterscotch"].Flavour + chocolate * ingredients["Chocolate"].Flavour + candy * ingredients["Candy"].Flavour;
+                    long textureScore = sprinkles * ingredients["Sprinkles"].Texture + butterscotch * ingredients["Butterscotch"].Texture + chocolate * ingredients["Chocolate"].Texture + candy * ingredients["Candy"].Texture;
 
-            var capacities = ingredients.ToList().Select(i => i.Value.Capacity).ToList();
-            var capScore = capacities[0] * butterscotch + capacities[1] * sprinkles;
+                    if (capacityScore <= 0 || durabilityScore <= 0 || flavourScore <= 0 || textureScore <= 0)
+                    {
+                        continue;
+                    }
 
-            var durabilities = ingredients.ToList().Select(i => i.Value.Durability).ToList();
-            var durScore = durabilities[0] * butterscotch + durabilities[1] * sprinkles;
+                    long totalScore = capacityScore * durabilityScore * flavourScore * textureScore;
 
-            var flavours = ingredients.ToList().Select(i => i.Value.Flavour).ToList();
-            var flavScore = flavours[0] * butterscotch + flavours[1] * sprinkles;
-
-            var textures = ingredients.ToList().Select(i => i.Value.Texture).ToList();
-            var textScore = textures[0] * butterscotch + textures[1] * sprinkles;
-
-            /* long capScore = ingredients.GetValueOrDefault("Sprinkles")!.Capacity * sprinkles +
-                            ingredients.GetValueOrDefault("Butterscotch")!.Capacity * butterscotch +
-                            ingredients.GetValueOrDefault("Chocolate")!.Capacity * chocolate +
-                            ingredients.GetValueOrDefault("Candy")!.Capacity * candy;
-
-            long durScore = ingredients.GetValueOrDefault("Sprinkles")!.Durability * sprinkles +
-                            ingredients.GetValueOrDefault("Butterscotch")!.Durability * butterscotch +
-                            ingredients.GetValueOrDefault("Chocolate")!.Durability * chocolate +
-                            ingredients.GetValueOrDefault("Candy")!.Durability * candy;
-
-            long flavScore = ingredients.GetValueOrDefault("Sprinkles")!.Flavour * sprinkles +
-                            ingredients.GetValueOrDefault("Butterscotch")!.Flavour * butterscotch +
-                            ingredients.GetValueOrDefault("Chocolate")!.Flavour * chocolate +
-                            ingredients.GetValueOrDefault("Candy")!.Flavour * candy;
-
-            long textScore = ingredients.GetValueOrDefault("Sprinkles")!.Texture * sprinkles +
-                            ingredients.GetValueOrDefault("Butterscotch")!.Texture * butterscotch +
-                            ingredients.GetValueOrDefault("Chocolate")!.Texture * chocolate +
-                            ingredients.GetValueOrDefault("Candy")!.Texture * candy; */
-
-            long totalScore = capScore * durScore * flavScore * textScore;
-
-            if (totalScore > result) result = totalScore;
-
+                    if (totalScore > result)
+                    {
+                        result = totalScore;
+                    }
+                }
+            }
         }
 
         Console.WriteLine(result);
-        Assert.Equal(-1, result);
+        Assert.Equal(21367368, result);
     }
 
     [Fact]
     public void PartTwo()
     {
-        int result = 0;
+        long result = 0;
+
+        Dictionary<string, Ingredient> ingredients = new();
+
+        foreach (string line in input)
+        {
+            Match match = Regex.Match(line, "(.*?): capacity (-*\\d+?), durability (-*\\d+?), flavor (-*\\d+?), texture (-*\\d+?), calories (-*\\d+?)");
+
+            ingredients.Add(match.Groups[1].Value, new()
+            {
+                Name = match.Groups[1].Value,
+                Capacity = int.Parse(match.Groups[2].Value),
+                Durability = int.Parse(match.Groups[3].Value),
+                Flavour = int.Parse(match.Groups[4].Value),
+                Texture = int.Parse(match.Groups[5].Value),
+                Calories = int.Parse(match.Groups[6].Value)
+            });
+        }
+
+        for (var sprinkles = 0; sprinkles < 100; sprinkles++)
+        {
+            for (var butterscotch = 0; butterscotch <= 100 - sprinkles; butterscotch++)
+            {
+                for (var chocolate = 0; chocolate <= 100 - sprinkles - butterscotch; chocolate++)
+                {
+                    var candy = 100 - sprinkles - butterscotch - chocolate;
+                    int calories = sprinkles * ingredients["Sprinkles"].Calories + butterscotch * ingredients["Butterscotch"].Calories + chocolate * ingredients["Chocolate"].Calories + candy * ingredients["Candy"].Calories;
+                    if (calories != 500)
+                    {
+                        continue;
+                    }
+
+                    long capacityScore = sprinkles * ingredients["Sprinkles"].Capacity + butterscotch * ingredients["Butterscotch"].Capacity + chocolate * ingredients["Chocolate"].Capacity + candy * ingredients["Candy"].Capacity;
+                    long durabilityScore = sprinkles * ingredients["Sprinkles"].Durability + butterscotch * ingredients["Butterscotch"].Durability + chocolate * ingredients["Chocolate"].Durability + candy * ingredients["Candy"].Durability;
+                    long flavourScore = sprinkles * ingredients["Sprinkles"].Flavour + butterscotch * ingredients["Butterscotch"].Flavour + chocolate * ingredients["Chocolate"].Flavour + candy * ingredients["Candy"].Flavour;
+                    long textureScore = sprinkles * ingredients["Sprinkles"].Texture + butterscotch * ingredients["Butterscotch"].Texture + chocolate * ingredients["Chocolate"].Texture + candy * ingredients["Candy"].Texture;
+
+                    if (capacityScore <= 0 || durabilityScore <= 0 || flavourScore <= 0 || textureScore <= 0)
+                    {
+                        continue;
+                    }
+
+                    long totalScore = capacityScore * durabilityScore * flavourScore * textureScore;
+
+                    if (totalScore > result)
+                    {
+                        result = totalScore;
+                    }
+                }
+            }
+        }
 
         Console.WriteLine(result);
-        Assert.Equal(-1, result);
+        Assert.Equal(1766400, result);
     }
 }
 
